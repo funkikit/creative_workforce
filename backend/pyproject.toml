@@ -12,6 +12,9 @@ dependencies = [
     "pydantic-settings>=2.6,<3",
     "sqlmodel>=0.0.16,<0.0.17",
     "httpx[http2]>=0.27,<0.28",
+    "google-cloud-storage>=2.18,<3",
+    "google-cloud-tasks>=2.15,<3",
+    "google-cloud-aiplatform>=1.70,<2",
 ]
 
 [dependency-groups]

@@ -39,6 +39,9 @@ class InMemoryTaskQueueService:
         )
         return job
 
+    def pending(self) -> list[TaskJob]:
+        return list(self._queue)
+
 
 @dataclass(slots=True)
 class VectorSearchResult:

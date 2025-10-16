@@ -75,3 +75,48 @@ def test_episode_artifact_requires_episode(client):
         },
     )
     assert bad_resp.status_code == 400
+
+
+def test_generate_overall_spec_agent_creates_artifact(client):
+    http_client, storage_root = client
+    project_resp = http_client.post(
+        "/api/projects",
+        json={"name": "Agent Project", "description": "", "episodes_planned": 1},
+    )
+    project_id = project_resp.json()["id"]
+
+    generation_resp = http_client.post(
+        f"/api/projects/{project_id}/artifacts/overall_spec/generate",
+        json={"created_by": "tester", "instructions": "Focus on rival"},
+    )
+    assert generation_resp.status_code == 200
+    payload = generation_resp.json()
+    artifact_path = payload["artifact"]["storage_path"]
+
+    stored_file = storage_root / artifact_path
+    assert stored_file.exists()
+    assert "Agent Project" in stored_file.read_text()
+
+
+def test_generate_keyframe_enqueues_task(client):
+    http_client, _ = client
+    project_resp = http_client.post(
+        "/api/projects",
+        json={"name": "Keyframe Project", "episodes_planned": 2},
+    )
+    project_id = project_resp.json()["id"]
+
+    queue_resp = http_client.post(
+        f"/api/projects/{project_id}/artifacts/keyframe_image/generate",
+        json={
+            "created_by": "tester",
+            "instructions": "Show the hero awaiting the eclipse",
+            "episode": 1,
+        },
+    )
+    assert queue_resp.status_code == 202
+
+    task_queue = dependencies.get_task_queue_service()
+    assert len(task_queue.pending()) == 1
+    job = task_queue.pending()[0]
+    assert job.payload["task_type"] == "generate_keyframe"

@@ -79,3 +79,29 @@ async def test_save_text_artifact_increments_version(sqlite_env: Path) -> None:
     assert artifact_v2.version == 2
     assert len(stored_files) == 2
     assert sorted(versions) == [1, 2]
+
+
+@pytest.mark.asyncio
+async def test_save_binary_artifact_persists_bytes(sqlite_env: Path) -> None:
+    storage_root = sqlite_env / "binary_storage"
+    storage = LocalStorageService(root=storage_root)
+    with db.session() as session:
+        project = Project(name="Binary Project")
+        session.add(project)
+        session.commit()
+        session.refresh(project)
+
+        service = ArtifactService(session=session, storage=storage)
+        artifact = await service.save_binary_artifact(
+            project_id=project.id,
+            template_code="keyframe_image",
+            data=b"\x89PNGstub",
+            created_by="tester",
+            content_type="image/png",
+        )
+
+        stored = storage.root / artifact.storage_path
+        payload = await storage.load_bytes(artifact.storage_path)
+
+    assert stored.exists()
+    assert payload == b"\x89PNGstub"

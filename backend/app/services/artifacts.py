@@ -18,6 +18,7 @@ class ArtifactService:
         "text/plain": ".txt",
         "application/json": ".json",
         "application/octet-stream": ".bin",
+        "image/png": ".png",
     }
 
     def __init__(
@@ -64,6 +65,54 @@ class ArtifactService:
         )
 
         await self._storage.save_bytes(str(relative_path), content.encode("utf-8"))
+
+        artifact = Artifact(
+            project_id=project_id,
+            template_code=template_code,
+            episode=episode,
+            version=version,
+            status=status,
+            storage_path=str(relative_path),
+            created_by=created_by,
+        )
+        self._session.add(artifact)
+        self._session.commit()
+        self._session.refresh(artifact)
+        return artifact
+
+    async def save_binary_artifact(
+        self,
+        *,
+        project_id: int,
+        template_code: str,
+        data: bytes,
+        created_by: str,
+        episode: Optional[int] = None,
+        status: str = "final",
+        content_type: str = "application/octet-stream",
+    ) -> Artifact:
+        version = self._next_version(project_id=project_id, template_code=template_code, episode=episode)
+        extension = self._CONTENT_TYPE_EXTENSIONS.get(content_type, ".bin")
+        relative_path = self._build_storage_path(
+            project_id=project_id,
+            template_code=template_code,
+            version=version,
+            extension=extension,
+            episode=episode,
+        )
+
+        self._logger.debug(
+            "Saving binary artifact",
+            extra={
+                "project_id": project_id,
+                "template_code": template_code,
+                "episode": episode,
+                "version": version,
+                "path": str(relative_path),
+            },
+        )
+
+        await self._storage.save_bytes(str(relative_path), data)
 
         artifact = Artifact(
             project_id=project_id,
