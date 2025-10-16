@@ -1,9 +1,8 @@
 import asyncio
 
 from httpx import AsyncClient
-from fastapi import FastAPI
 
-from backend.app.main import app
+from app.main import app
 
 
 async def test_healthcheck() -> None:

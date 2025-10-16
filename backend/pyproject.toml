@@ -3,15 +3,23 @@ name = "creative-workforce-backend"
 version = "0.1.0"
 description = "Backend service for the creative workforce platform"
 requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.110,<0.112",
+    "uvicorn[standard]>=0.30,<0.31",
+    "langchain>=0.2,<0.3",
+    "langgraph>=0.1,<0.2",
+    "pydantic>=2.6,<3",
+    "sqlmodel>=0.0.16,<0.0.17",
+    "httpx[http2]>=0.27,<0.28",
+]
 
-[project.dependencies]
-fastapi = "^0.110.0"
-uvicorn = "^0.30.0"
-langchain = "^0.2.0"
-langgraph = "^0.1.0"
-pydantic = "^2.6.0"
-sqlmodel = "^0.0.16"
-httpx = {version = "^0.27.0", extras = ["http2"]}
+[dependency-groups]
+dev = [
+    "pytest>=8.2,<9",
+    "pytest-asyncio>=0.23,<0.24",
+    "ruff>=0.4,<0.5",
+    "black>=24.4,<25",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["backend/tests"]
