@@ -10,12 +10,12 @@
 
 ### 未実装・要対応
 - [ ] Mermaid図にある ChatAPI（会話・エージェント召喚）や tRPC 連携は未実装。生成APIは `projects` ドメインに限定。
-- [ ] `config/env/.env.example` など環境変数テンプレートが未作成。GCP用 `terraform/` も空のため IaC 定義が必要。
+- [x] `config/env/.env.example` など環境変数テンプレートが未作成。GCP用 `terraform/` も空のため IaC 定義が必要。
 - [ ] Frontend は雛形のみで、会話UI・サイドバー・制作進行ビューといった設計未着手。
 
 ### 次アクション
 1. ChatAPI／会話ルーターとフロントのtRPCクライアントを設計し、エージェント呼び出しを会話体験に統合。
-2. `config/env` テンプレートと Terraform/Cloud Build 設定を追加し、GCPデプロイフローを定義。
+2. Terraform/Cloud Build 設定を追加し、GCPデプロイフローを定義。
 3. フロントエンドの情報設計（チャット、成果物ツリー、進行ビュー）のUI実装を開始。
 
 ## PoC仕様書.md
