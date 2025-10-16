@@ -7,10 +7,11 @@
 - [x] `docker-compose.yaml` で PostgreSQL / MinIO / Redis / backend / frontend を一括起動できるローカル環境を用意。
 - [x] `scripts/setup_local.sh` などの補助スクリプトを配置済み。
 - [x] LangGraphベースのテキスト/画像エージェントとCloud Tasksワーカー、生成API (`/api/projects/{id}/artifacts/{code}/generate`, `/api/tasks/generate-keyframe`) を追加。
+- [x] `config/env/.env.(example|local|gcp).example` に環境変数テンプレートを整備。
+- [x] 開発者向けスタートガイド (`documents/スタートガイド.md`) を作成。
 
 ### 未実装・要対応
 - [ ] Mermaid図にある ChatAPI（会話・エージェント召喚）や tRPC 連携は未実装。生成APIは `projects` ドメインに限定。
-- [x] `config/env/.env.example` など環境変数テンプレートが未作成。GCP用 `terraform/` も空のため IaC 定義が必要。
 - [ ] Frontend は雛形のみで、会話UI・サイドバー・制作進行ビューといった設計未着手。
 
 ### 次アクション
