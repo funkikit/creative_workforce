@@ -1,0 +1,24 @@
+[project]
+name = "creative-workforce-backend"
+version = "0.1.0"
+description = "Backend service for the creative workforce platform"
+requires-python = ">=3.11"
+
+[project.dependencies]
+fastapi = "^0.110.0"
+uvicorn = "^0.30.0"
+langchain = "^0.2.0"
+langgraph = "^0.1.0"
+pydantic = "^2.6.0"
+sqlmodel = "^0.0.16"
+httpx = {version = "^0.27.0", extras = ["http2"]}
+
+[tool.pytest.ini_options]
+testpaths = ["backend/tests"]
+asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 100
+
+[tool.black]
+line-length = 100

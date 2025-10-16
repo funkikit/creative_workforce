@@ -1,0 +1,7 @@
+FROM ghcr.io/astral-sh/uv:python3.11-bookworm
+WORKDIR /workspace
+COPY backend/pyproject.toml backend/uv.lock ./backend/
+RUN cd backend && uv sync --frozen
+COPY backend /workspace/backend
+COPY config /workspace/config
+CMD ["uv", "run", "uvicorn", "backend.app.main:app", "--host", "0.0.0.0", "--port", "8000"]

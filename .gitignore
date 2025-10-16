@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+node_modules/
+frontend/.next/
+frontend/out/
+.env
+config/env/.env.local
+config/env/.env.gcp
+config/env/.env.local.example.generated
+.data/
+.DS_Store

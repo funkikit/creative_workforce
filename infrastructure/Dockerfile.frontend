@@ -1,0 +1,6 @@
+FROM node:20-bullseye
+WORKDIR /workspace/frontend
+COPY frontend/package.json ./
+RUN npm install -g pnpm && pnpm install
+COPY frontend /workspace/frontend
+CMD ["pnpm", "dev", "--host", "0.0.0.0"]
