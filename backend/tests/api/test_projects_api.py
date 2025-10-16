@@ -54,6 +54,13 @@ def test_project_workflow(client):
     assert list_resp.status_code == 200
     assert len(list_resp.json()) == 1
 
+    artifact_id = artifact["id"]
+    content_resp = http_client.get(
+        f"/api/projects/{project['id']}/artifacts/{artifact_id}"
+    )
+    assert content_resp.status_code == 200
+    assert "Overview" in content_resp.json()["content"]
+
     progress_resp = http_client.get(f"/api/projects/{project['id']}/progress")
     assert progress_resp.status_code == 200
     progress = progress_resp.json()
@@ -92,10 +99,17 @@ def test_generate_overall_spec_agent_creates_artifact(client):
     assert generation_resp.status_code == 200
     payload = generation_resp.json()
     artifact_path = payload["artifact"]["storage_path"]
+    artifact_id = payload["artifact"]["id"]
 
     stored_file = storage_root / artifact_path
     assert stored_file.exists()
     assert "Agent Project" in stored_file.read_text()
+
+    content_resp = http_client.get(
+        f"/api/projects/{project_id}/artifacts/{artifact_id}"
+    )
+    assert content_resp.status_code == 200
+    assert "Agent Project" in content_resp.json()["content"]
 
 
 def test_generate_keyframe_enqueues_task(client):

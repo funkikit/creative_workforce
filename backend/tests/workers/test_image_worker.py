@@ -66,3 +66,11 @@ def test_worker_generates_keyframe(worker_setup):
     stored = storage_root / data["storage_path"]
     assert stored.exists()
     assert stored.read_bytes().startswith(b"PLACEHOLDER_IMAGE")
+
+    content_resp = client.get(
+        f"/api/projects/{project_id}/artifacts/{data['artifact_id']}"
+    )
+    assert content_resp.status_code == 200
+    body = content_resp.json()
+    assert body["is_binary"] is True
+    assert isinstance(body["content"], str)

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import base64
 from typing import Any, Dict, List, Optional, Union
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -84,6 +85,13 @@ class GenerationQueuedResponse(BaseModel):
     template_code: str
 
 
+class ArtifactContentResponse(BaseModel):
+    artifact: ArtifactRead
+    content: Optional[str]
+    content_type: str
+    is_binary: bool = False
+
+
 class CompletionSummary(BaseModel):
     completed: List[str]
     pending: List[str]
@@ -124,23 +132,11 @@ async def create_project_artifact(
     except ValueError as exc:  # pragma: no cover - input validation path
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
 
-    if payload.template_code in EPISODE_TEMPLATES:
-        if payload.episode is None:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Episode is required for episodic templates",
-            )
-        if payload.episode > project.episodes_planned:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Episode exceeds planned count",
-            )
-    else:
-        if payload.episode is not None:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Episode must be omitted for global templates",
-            )
+    _validate_template_episode(
+        template_code=payload.template_code,
+        project=project,
+        episode=payload.episode,
+    )
 
     artifact = await ArtifactService(session=session, storage=storage).save_text_artifact(
         project_id=project_id,
@@ -290,6 +286,47 @@ async def generate_project_artifact(
         artifact=ArtifactRead.model_validate(artifact),
         metadata=result.get("metadata", {}),
     )
+
+
+@router.get(
+    "/{project_id}/artifacts/{artifact_id}", response_model=ArtifactContentResponse
+)
+async def get_artifact_content(
+    project_id: int,
+    artifact_id: int,
+    session: Session = Depends(get_session),
+    storage: StorageService = Depends(get_storage_service),
+) -> ArtifactContentResponse:
+    artifact = session.get(Artifact, artifact_id)
+    if artifact is None or artifact.project_id != project_id:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Artifact not found")
+
+    try:
+        data = await storage.load_bytes(artifact.storage_path)
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Artifact file missing") from exc
+
+    try:
+        binary_hint = artifact.storage_path.lower().endswith(
+            (".png", ".jpg", ".jpeg", ".webp", ".gif", ".bin")
+        )
+        if binary_hint:
+            raise UnicodeDecodeError("binary", b"", 0, 1, "binary file")
+        content = data.decode("utf-8")
+        return ArtifactContentResponse(
+            artifact=ArtifactRead.model_validate(artifact),
+            content=content,
+            content_type="text/plain",
+            is_binary=False,
+        )
+    except UnicodeDecodeError:
+        encoded = base64.b64encode(data).decode("ascii")
+        return ArtifactContentResponse(
+            artifact=ArtifactRead.model_validate(artifact),
+            content=encoded,
+            content_type="application/octet-stream",
+            is_binary=True,
+        )
 
 
 @router.get("/{project_id}/progress", response_model=ProjectProgressResponse)
