@@ -1,6 +1,7 @@
 from functools import lru_cache
 from typing import Literal
 
+from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -12,7 +13,7 @@ class Settings(BaseSettings):
     gemini_api_key: str | None = None
     llm_provider: Literal["local", "openai"] = "local"
     llm_model: str = "gpt-4o-mini"
-    llm_output_style: str = "creative brief"
+    llm_output_style: str = "クリエイティブ・ブリーフ"
     image_provider: Literal["placeholder", "gemini"] = "placeholder"
     image_model: str = "imagen-3.0-generate"
     local_storage_root: str = "data/artifacts"
@@ -30,6 +31,17 @@ class Settings(BaseSettings):
     vertex_project: str | None = None
     vertex_location: str | None = None
     vertex_embedding_model: str = "textembedding-gecko@003"
+    cors_allow_origins: list[str] = Field(default_factory=lambda: ["http://localhost:3000"])
+    cors_allow_credentials: bool = True
+    cors_allow_methods: list[str] = Field(default_factory=lambda: ["*"])
+    cors_allow_headers: list[str] = Field(default_factory=lambda: ["*"])
+
+    @field_validator("cors_allow_origins", "cors_allow_methods", "cors_allow_headers", mode="before")
+    @classmethod
+    def _split_csv(cls, value: str | list[str]) -> list[str]:
+        if isinstance(value, str):
+            return [item.strip() for item in value.split(",") if item.strip()]
+        return value
 
 
 @lru_cache(maxsize=1)

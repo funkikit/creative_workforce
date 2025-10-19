@@ -20,7 +20,7 @@ def validate_template_code(template_code: str) -> None:
     """Ensure a template code exists within the known catalogue."""
 
     if template_code not in GLOBAL_TEMPLATES + EPISODE_TEMPLATES:
-        raise ValueError(f"Unknown template code: {template_code}")
+        raise ValueError(f"未対応のテンプレートコードです: {template_code}")
 
 
 def all_template_codes() -> list[str]:

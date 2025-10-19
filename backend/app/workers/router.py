@@ -71,14 +71,14 @@ async def handle_keyframe_task(
     image_client: ImageGenerationClient = Depends(get_image_generation_client),
 ):
     if payload.task_type != "generate_keyframe":
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Unsupported task type")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="対応していないタスク種別です")
     if payload.template_code != "keyframe_image":
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Unsupported template")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="対応していないテンプレートです")
 
     project_service = ProjectService(session=session)
     project = project_service.get_project(payload.project_id)
     if project is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="プロジェクトが見つかりません")
 
     summary = await _load_previous_summary(
         session=session,

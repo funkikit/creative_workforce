@@ -17,7 +17,7 @@ class ProjectProgressService:
     def project(self, project_id: int) -> Project:
         project = self._session.get(Project, project_id)
         if project is None:
-            raise ValueError(f"Project {project_id} not found")
+            raise ValueError(f"プロジェクト {project_id} が見つかりません")
         return project
 
     def summarize(self, project_id: int) -> Dict[str, object]:

@@ -1,5 +1,6 @@
 from .artifacts import ArtifactService
 from .gcp import CloudTasksQueueService, GCSStorageService, VertexVectorStoreService
+from .conversation import ConversationService
 from .image import GeminiImageClient, ImageGenerationClient, PlaceholderImageClient
 from .llm import LLMClient, OpenAILLMClient, TemplateLLMClient
 from .local import (
@@ -15,6 +16,7 @@ from .projects import ProjectService
 __all__ = [
     "ArtifactService",
     "CloudTasksQueueService",
+    "ConversationService",
     "GeminiImageClient",
     "GCSStorageService",
     "InMemoryTaskQueueService",

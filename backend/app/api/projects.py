@@ -49,7 +49,7 @@ def create_project(payload: ProjectCreate, session: Session = Depends(get_sessio
 def list_project_artifacts(project_id: int, session: Session = Depends(get_session)) -> List[ArtifactRead]:
     project = ProjectService(session=session).get_project(project_id)
     if project is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="プロジェクトが見つかりません")
 
     artifacts = session.exec(
         select(Artifact)
@@ -125,7 +125,7 @@ async def create_project_artifact(
     project_service = ProjectService(session=session)
     project = project_service.get_project(project_id)
     if project is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="プロジェクトが見つかりません")
 
     try:
         validate_template_code(payload.template_code)
@@ -160,18 +160,18 @@ def _validate_template_episode(
         if episode is None:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Episode is required for episodic templates",
+                detail="このテンプレートにはエピソード番号の指定が必要です",
             )
         if episode > project.episodes_planned:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Episode exceeds planned count",
+                detail="エピソード番号が計画話数を超えています",
             )
     else:
         if episode is not None:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Episode must be omitted for global templates",
+                detail="全体テンプレートではエピソード番号を指定できません",
             )
 
 
@@ -225,7 +225,7 @@ async def generate_project_artifact(
     project_service = ProjectService(session=session)
     project = project_service.get_project(project_id)
     if project is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="プロジェクトが見つかりません")
 
     _validate_template_episode(
         template_code=template_code, project=project, episode=payload.episode
@@ -299,12 +299,12 @@ async def get_artifact_content(
 ) -> ArtifactContentResponse:
     artifact = session.get(Artifact, artifact_id)
     if artifact is None or artifact.project_id != project_id:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Artifact not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="成果物が見つかりません")
 
     try:
         data = await storage.load_bytes(artifact.storage_path)
     except FileNotFoundError as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Artifact file missing") from exc
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="成果物ファイルが見つかりません") from exc
 
     try:
         binary_hint = artifact.storage_path.lower().endswith(
@@ -336,7 +336,7 @@ def project_progress(
     project_service = ProjectService(session=session)
     project = project_service.get_project(project_id)
     if project is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="プロジェクトが見つかりません")
 
     summary = ProjectProgressService(session=session).summarize(project_id)
     return ProjectProgressResponse.model_validate(summary)

@@ -17,9 +17,9 @@ class TemplateLLMClient:
 
     async def generate_text(self, *, prompt: str, temperature: float = 0.3) -> str:
         await asyncio.sleep(0)
-        header = f"# {self.style.title()} Output"
+        header = f"# {self.style} のサンプル出力"
         body = prompt.strip()
-        return f"{header}\n\n{body}\n\n- temperature: {temperature:.1f}"
+        return f"{header}\n\n{body}\n\n- 使用温度: {temperature:.1f}"
 
 
 class OpenAILLMClient:
@@ -31,7 +31,7 @@ class OpenAILLMClient:
         try:
             from openai import AsyncOpenAI  # type: ignore import-not-found
         except ImportError as exc:  # pragma: no cover - optional dependency
-            raise RuntimeError("openai package is required for OpenAILLMClient") from exc
+            raise RuntimeError("OpenAILLMClient を利用するには openai パッケージが必要です") from exc
         self._client = AsyncOpenAI(api_key=api_key)
 
     async def generate_text(self, *, prompt: str, temperature: float = 0.3) -> str:

@@ -59,7 +59,7 @@ class LocalVectorStoreService:
 
     def add_document(self, *, doc_id: str, text: str) -> None:
         if not doc_id:
-            raise ValueError("doc_id must be provided")
+            raise ValueError("doc_id を指定してください")
         self._docs[doc_id] = text
         self._logger.debug(
             "Document added to local vector store",
@@ -95,7 +95,7 @@ class LocalStorageService:
         try:
             candidate.relative_to(self._resolved_root)
         except ValueError as exc:  # pragma: no cover - defensive, but easy to trigger
-            raise ValueError(f"Path {relative_path!r} escapes local storage root") from exc
+            raise ValueError(f"パス {relative_path!r} がローカルストレージのルート外を参照しています") from exc
         return candidate
 
     async def save_bytes(self, relative_path: str, data: bytes) -> None:

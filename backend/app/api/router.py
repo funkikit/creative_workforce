@@ -7,6 +7,7 @@ from app.core.dependencies import (
 )
 from app.services.base import StorageService, TaskQueueService, VectorStoreService
 
+from .chat import router as chat_router
 from .projects import router as projects_router
 from app.workers.router import router as tasks_router
 
@@ -14,6 +15,7 @@ from app.workers.router import router as tasks_router
 router = APIRouter(prefix="/api")
 router.include_router(projects_router)
 router.include_router(tasks_router)
+router.include_router(chat_router)
 
 
 @router.get("/health", tags=["system"])

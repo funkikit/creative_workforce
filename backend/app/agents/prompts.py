@@ -6,42 +6,42 @@ from textwrap import dedent
 TEXT_PROMPTS: dict[str, str] = {
     "overall_spec": dedent(
         """
-        You are outlining the overarching creative brief for the project "{project_name}".
-        Summarise the long-term scenario, key characters, and world-building in a structured Markdown document.
-        Include sections for Setting, Characters, and Story Arcs. Incorporate any additional instructions: {instructions}
+        あなたはプロジェクト「{project_name}」の全体企画書を作成します。
+        世界観、主要キャラクター、長期的な物語構成を Markdown 形式で整理してください。
+        セクション構成は「舞台設定」「キャラクター」「ストーリー展開」とし、追加指示があれば反映してください: {instructions}
         """
     ).strip(),
     "character_design": dedent(
         """
-        Generate a character design sheet for the project "{project_name}" episode {episode_label}.
-        Provide Markdown bullets describing appearance, personality, costume, and signature poses.
-        Reference existing lore: {existing_summary}. Apply instructions: {instructions}
+        プロジェクト「{project_name}」の{episode_label}に登場するキャラクター設定資料を作成してください。
+        外見・性格・衣装・特徴的なポーズを Markdown の箇条書きでまとめてください。
+        既存設定: {existing_summary}。追加指示: {instructions}
         """
     ).strip(),
     "background_sample": dedent(
         """
-        Produce descriptive references for background environments in "{project_name}".
-        List at least three settings with mood, lighting, and colour palette guidance. Instructions: {instructions}
+        プロジェクト「{project_name}」の背景イメージ案を作成してください。
+        少なくとも3つのロケーションについて、雰囲気・ライティング・カラーパレットの指針を記載してください。追加指示: {instructions}
         """
     ).strip(),
     "episode_summary": dedent(
         """
-        Write an episode synopsis for episode {episode_number} of "{project_name}".
-        Provide logline, act breakdown, and cliffhanger in Markdown. Consider existing canon: {existing_summary}.
-        Extra guidance: {instructions}
+        プロジェクト「{project_name}」の第{episode_number}話のあらすじを作成してください。
+        ログライン、各幕の構成、次回への引き（クリフハンガー）を Markdown でまとめてください。
+        既存の設定: {existing_summary}。追加指示: {instructions}
         """
     ).strip(),
     "episode_script": dedent(
         """
-        Draft a short script excerpt for episode {episode_number} of "{project_name}".
-        Use markdown with dialogue lines and beats. Leverage synopsis: {existing_summary}. Instructions: {instructions}
+        プロジェクト「{project_name}」第{episode_number}話の脚本抜粋を作成してください。
+        台詞とト書きを Markdown 形式で記述し、あらすじ: {existing_summary} を踏まえてください。追加指示: {instructions}
         """
     ).strip(),
     "storyboard_table": dedent(
         """
-        Create a storyboard table for episode {episode_number} of "{project_name}".
-        Return a markdown table with columns: Timecode, Visual, Direction, Notes.
-        Base direction on synopsis: {existing_summary}. Extra requirements: {instructions}
+        プロジェクト「{project_name}」第{episode_number}話の絵コンテ表を作成してください。
+        Markdown の表として「タイムコード」「画面」「演出メモ」「補足」を列に含めてください。
+        参考となるあらすじ: {existing_summary}。追加要件: {instructions}
         """
     ).strip(),
 }
@@ -49,8 +49,8 @@ TEXT_PROMPTS: dict[str, str] = {
 
 IMAGE_PROMPT_TEMPLATE = dedent(
     """
-    Generate a keyframe concept art for episode {episode_number} of "{project_name}".
-    Scene description: {instructions}
-    Maintain consistency with existing lore: {existing_summary}
+    プロジェクト「{project_name}」第{episode_number}話のキーフレームとなるコンセプトアートを生成してください。
+    シーンの説明: {instructions}
+    既存設定との整合性を保ってください: {existing_summary}
     """
 ).strip()

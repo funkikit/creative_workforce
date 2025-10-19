@@ -46,4 +46,4 @@ async def test_image_agent_produces_placeholder_bytes() -> None:
     result = await agent.generate()
 
     assert result["content"].startswith(b"PLACEHOLDER_IMAGE")
-    assert result["metadata"]["prompt"].startswith("# Prompt")
+    assert "Stellar Saga" in result["metadata"]["prompt"]

@@ -25,12 +25,12 @@ def _build_storage_service(settings: Settings) -> StorageService:
         return LocalStorageService(root=_resolve_local_storage_root(settings))
     if settings.env_target == "gcp":
         if not settings.gcs_bucket:
-            raise ValueError("GCS bucket must be configured for GCP environment")
+            raise ValueError("GCP 環境では GCS バケットを設定してください")
         return GCSStorageService(
             bucket_name=settings.gcs_bucket,
             base_path=settings.gcs_base_path,
         )
-    raise ValueError(f"Unsupported env_target: {settings.env_target}")
+    raise ValueError(f"未対応の env_target 値です: {settings.env_target}")
 
 
 def _build_vector_store_service(settings: Settings) -> VectorStoreService:
@@ -39,13 +39,13 @@ def _build_vector_store_service(settings: Settings) -> VectorStoreService:
     if settings.env_target == "gcp":
         project_id = settings.vertex_project or settings.gcp_project
         if not project_id:
-            raise ValueError("GCP project must be configured for Vertex vector store")
+            raise ValueError("Vertex ベクトルストアには GCP プロジェクト ID の設定が必要です")
         return VertexVectorStoreService(
             project_id=project_id,
             location=settings.vertex_location or settings.gcp_location,
             embedding_model=settings.vertex_embedding_model,
         )
-    raise ValueError(f"Unsupported env_target: {settings.env_target}")
+    raise ValueError(f"未対応の env_target 値です: {settings.env_target}")
 
 
 def _build_task_queue_service(settings: Settings) -> TaskQueueService:
@@ -53,10 +53,10 @@ def _build_task_queue_service(settings: Settings) -> TaskQueueService:
         return InMemoryTaskQueueService()
     if settings.env_target == "gcp":
         if not settings.cloud_tasks_queue_id or not settings.cloud_tasks_target_url:
-            raise ValueError("Cloud Tasks queue ID and target URL must be set for GCP environment")
+            raise ValueError("GCP 環境では Cloud Tasks のキュー ID とターゲット URL を設定してください")
         project_id = settings.cloud_tasks_project or settings.gcp_project
         if not project_id:
-            raise ValueError("Cloud Tasks project must be configured for GCP environment")
+            raise ValueError("Cloud Tasks を利用するにはプロジェクト ID の設定が必要です")
         return CloudTasksQueueService(
             project_id=project_id,
             location=settings.cloud_tasks_location or settings.gcp_location,
@@ -64,7 +64,7 @@ def _build_task_queue_service(settings: Settings) -> TaskQueueService:
             target_url=settings.cloud_tasks_target_url,
             service_account_email=settings.cloud_tasks_service_account_email,
         )
-    raise ValueError(f"Unsupported env_target: {settings.env_target}")
+    raise ValueError(f"未対応の env_target 値です: {settings.env_target}")
 
 
 def _build_llm_client(settings: Settings) -> LLMClient:
