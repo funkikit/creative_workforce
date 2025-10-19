@@ -1,14 +1,16 @@
-import { TrpcProvider } from '../lib/trpc/provider'
+import "./globals.css";
+
+import { TrpcProvider } from "../lib/trpc/provider";
 
 export const metadata = {
-  title: 'Creative Workforce PoC',
-  description: 'Creative Workforce PoC Console',
-}
+  title: "Creative Workforce PoC",
+  description: "Creative Workforce PoC Console",
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="ja">
@@ -16,5 +18,5 @@ export default function RootLayout({
         <TrpcProvider>{children}</TrpcProvider>
       </body>
     </html>
-  )
+  );
 }
