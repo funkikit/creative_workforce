@@ -38,6 +38,5 @@ class OpenAILLMClient:
         response = await self._client.responses.create(
             model=self.model,
             input=prompt,
-            temperature=temperature,
         )
         return response.output_text

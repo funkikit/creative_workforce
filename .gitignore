@@ -9,4 +9,5 @@ config/env/.env.local
 config/env/.env.gcp
 config/env/.env.local.example.generated
 .data/
+backend/data/
 .DS_Store

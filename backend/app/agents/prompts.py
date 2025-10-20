@@ -13,7 +13,7 @@ TEXT_PROMPTS: dict[str, str] = {
     ).strip(),
     "character_design": dedent(
         """
-        プロジェクト「{project_name}」の{episode_label}に登場するキャラクター設定資料を作成してください。
+        プロジェクト「{project_name}」の主要キャラクター設定資料を作成してください。
         外見・性格・衣装・特徴的なポーズを Markdown の箇条書きでまとめてください。
         既存設定: {existing_summary}。追加指示: {instructions}
         """

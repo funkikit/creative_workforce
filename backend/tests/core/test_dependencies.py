@@ -1,11 +1,13 @@
 from pathlib import Path
+import sys
+from types import SimpleNamespace
 
 import pytest
 
 from app.core import dependencies
 from app.services.gcp import CloudTasksQueueService, GCSStorageService, VertexVectorStoreService
 from app.services.image import PlaceholderImageClient
-from app.services.llm import TemplateLLMClient
+from app.services.llm import OpenAILLMClient, TemplateLLMClient
 from app.services.local import InMemoryTaskQueueService, LocalStorageService, LocalVectorStoreService
 
 
@@ -42,6 +44,19 @@ def test_llm_and_image_clients_are_local_by_default(monkeypatch: pytest.MonkeyPa
 
     assert isinstance(llm, TemplateLLMClient)
     assert isinstance(image_client, PlaceholderImageClient)
+
+
+def test_llm_client_returns_openai_when_configured(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("LLM_PROVIDER", "openai")
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-test")
+    fake_client = SimpleNamespace()
+    fake_openai_module = SimpleNamespace(AsyncOpenAI=lambda api_key: fake_client)
+    monkeypatch.setitem(sys.modules, "openai", fake_openai_module)
+    dependencies.reset_service_providers()
+
+    llm = dependencies.get_llm_client()
+
+    assert isinstance(llm, OpenAILLMClient)
 
 
 def test_gcp_dependencies_return_gcp_services(monkeypatch: pytest.MonkeyPatch) -> None:

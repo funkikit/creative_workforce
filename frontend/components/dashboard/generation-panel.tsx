@@ -114,16 +114,29 @@ export function GenerationPanel({
               type="button"
               disabled={disabled}
               onClick={() => onGenerate(template)}
-              className={`rounded-xl border px-4 py-3 text-left text-sm transition ${
+              className={`group rounded-xl border px-4 py-3 text-left text-sm transition ${
                 disabled
                   ? "cursor-not-allowed border-slate-800 bg-slate-950/40 text-slate-500"
-                  : "border-slate-800 bg-slate-950/50 hover:border-blue-500/50 hover:bg-blue-500/10"
+                  : "border-slate-800 bg-slate-950/50 hover:border-blue-500/60 hover:bg-blue-500/10"
               }`}
             >
-              <span className="block text-base font-semibold text-white">{template.label}</span>
-              <span className="mt-1 block text-xs text-slate-400">
-                コード: {template.code}
-                {template.requiresEpisode ? "（エピソード指定）" : ""}
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <span className="block text-base font-semibold text-white">{template.label}</span>
+                  <span className="mt-1 block text-xs text-slate-400">
+                    コード: {template.code}
+                    {template.requiresEpisode ? "（エピソード指定）" : ""}
+                  </span>
+                </div>
+                <span
+                  aria-hidden
+                  className="mt-1 inline-flex h-7 w-7 items-center justify-center rounded-full border border-blue-500/50 text-xs font-semibold text-blue-300 transition group-hover:border-blue-300 group-hover:text-blue-100"
+                >
+                  ▶
+                </span>
+              </div>
+              <span className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-blue-300 group-hover:text-blue-100">
+                生成する
               </span>
             </button>
           ))}

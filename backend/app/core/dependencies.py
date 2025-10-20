@@ -68,7 +68,7 @@ def _build_task_queue_service(settings: Settings) -> TaskQueueService:
 
 
 def _build_llm_client(settings: Settings) -> LLMClient:
-    if settings.llm_provider == "local" or settings.env_target == "local" or not settings.openai_api_key:
+    if settings.llm_provider == "local" or not settings.openai_api_key:
         return TemplateLLMClient(style=settings.llm_output_style)
     return OpenAILLMClient(api_key=settings.openai_api_key, model=settings.llm_model)
 

@@ -24,7 +24,7 @@ import type {
 
 const TEMPLATES: GenerationTemplate[] = [
   { code: "overall_spec", label: "作品全体仕様書", kind: "text" },
-  { code: "character_design", label: "キャラクター設定", kind: "text", requiresEpisode: true },
+  { code: "character_design", label: "キャラクター設定", kind: "text" },
   { code: "background_sample", label: "背景サンプル", kind: "text" },
   { code: "episode_summary", label: "エピソード概要", kind: "text", requiresEpisode: true },
   { code: "episode_script", label: "エピソード脚本", kind: "text", requiresEpisode: true },
